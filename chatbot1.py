@@ -7,6 +7,8 @@ import requests
 import tkinter as tk
 from tkinter import messagebox
 import math
+from PIL import Image
+from io import BytesIO
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #A Predefined set of greetings to be used to greet the user to the program
 greetings = ["hi", "hello", "hey","Hello!"]
@@ -120,9 +122,7 @@ jokes = [
     "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them.",
     "Why don't some couples go to the gym? Because some relationships don't work out!",
     "Why did the scarecrow win an award? Because he was outstanding in his field!",
-    "Parallel lines have so much in common. It's a shame they'll never meet.",
-
-]
+    "Parallel lines have so much in common. It's a shame they'll never meet.", ]
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -235,6 +235,52 @@ def password():
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Movie Review
+def get_movie_details(movie_name, api_key):
+    base_url = "https://api.themoviedb.org/3/search/movie"
+    params = {
+        "api_key": api_key,
+        "query": movie_name,
+    }
+
+    response = requests.get(base_url, params=params)
+
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('results', [])
+    else:
+        return None
+
+# Function to display movie details in a pleasant format
+def display_movie_details(movie_data):
+    if movie_data:
+        print(f"Movie Details for '{movie_data[0]['title']}':")
+        print("-----------------------------------------------------------------------")
+        print(f"Title: {movie_data[0]['title']}")
+        print(f"Release Date: {movie_data[0]['release_date']}")
+        print(f"Overview: {movie_data[0]['overview']}")
+        print(f"Vote Average: {movie_data[0]['vote_average']}")
+        print(f"Vote Count: {movie_data[0]['vote_count']}")
+        print("-----------------------------------------------------------------------")
+    else:
+        print("Movie not found or API request failed. Please try again.")
+
+# Main chatbot loop
+def movie_review():
+    api_key = "26f686db28afe4deb183f11da46662a2"
+
+    while True:
+        movie_name = input("Please enter the name of the movie (or 'exit' to quit): ").strip()
+
+        if movie_name.lower() == 'exit':
+            print("Goodbye!")
+            break
+
+        movie_data = get_movie_details(movie_name, api_key)
+        display_movie_details(movie_data)
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def facts():
     limit = 1
     api_url = 'https://api.api-ninjas.com/v1/facts?limit={}'.format(limit)
@@ -287,23 +333,19 @@ def run_calculator():
         else:
             tk.Button(calculator, text=text, padx=20, pady=20, command=lambda t=text: button_click(t)).grid(row=row, column=col)
 
-    # Function to open the scientific calculator window
     def open_scientific_calculator():
-        # Create a new window for the scientific calculator
+
         scientific_calculator = tk.Toplevel(calculator)
         scientific_calculator.title("Scientific Calculator")
 
-        # Entry field to display and input numbers in the scientific calculator
         entry_scientific = tk.Entry(scientific_calculator, width=30)
         entry_scientific.grid(row=0, column=0, columnspan=6)
 
-        # Function to handle button clicks and update the entry field in the scientific calculator
         def button_click_scientific(number):
             current = entry_scientific.get()
             entry_scientific.delete(0, tk.END)
             entry_scientific.insert(0, current + str(number))
 
-        # Function to perform calculations and display the result in the scientific calculator
         def calculate_scientific():
             try:
                 result = eval(entry_scientific.get())
@@ -312,7 +354,6 @@ def run_calculator():
             except Exception as e:
                 messagebox.showerror("Error", str(e))
 
-        # Add trigonometric and logarithmic functions to the scientific calculator
         scientific_buttons = [
             ('sin', math.sin), ('cos', math.cos), ('tan', math.tan),
             ('log', math.log10), ('ln', math.log),
@@ -327,10 +368,8 @@ def run_calculator():
                 col = 0
                 row += 1
 
-        # Create '=' button to calculate and display the result in the scientific calculator
         tk.Button(scientific_calculator, text="=", padx=20, pady=20, command=calculate_scientific).grid(row=4, column=2)
 
-    # Create a button to open the scientific calculator
     tk.Button(calculator, text="Scientific Calculator", padx=20, pady=20, command=open_scientific_calculator).grid(row=5, column=0, columnspan=4)
 
     calculator.mainloop()
@@ -391,22 +430,17 @@ def main_phone_verify():
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #news api
 def get_top_news(API_KEY):
-    # Set up the API endpoint URL
     api_url = f'https://newsapi.org/v2/top-headlines?apiKey={API_KEY}&country=us'
 
     try:
-        # Make the API request
-        response = requests.get(api_url)
 
-        # Check if the request was successful (HTTP status code 200)
+        response = requests.get(api_url)
         if response.status_code == 200:
-            # Parse the JSON response
+
             news_data = response.json()
 
-            # Get the top 10 articles or less if there are fewer than 10
             articles = news_data['articles'][:10]
 
-            # Prepare a formatted message with the news headlines
             news_message = "\nTop 10 News Headlines:\n\n"
             for idx, article in enumerate(articles, start=1):
                 title = article['title']
@@ -450,9 +484,103 @@ def get_weather_info(city):
             return "Sorry, I couldn't find weather information for that location."
     except Exception as e:
         return f"An error occurred: {str(e)}"
-
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#NASA API FUNCTION
+nasa_api_key = "5G5Ho9kuGoGO8sHC6WX2tDO0745V8VHz3KLMmDhs"
+
+
+def nasa_chatbot():
+    while True:
+        print("\nNASA Chatbot Menu:")
+        print("1. Astronomy Picture of the Day (APOD)")
+        print("2. Mars Rover Photos")
+        print("3. ISS Information")
+        print("4. Quit")
+
+        choice = input("Enter your choice (1/2/3/4): ")
+
+        if choice == '1':
+            get_apod()
+        elif choice == '2':
+            get_mars_rover_photos()
+        elif choice == '3':
+            get_iss_information()
+        elif choice == '4':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a valid option.")
+
+
+def get_apod():
+    url = f"https://api.nasa.gov/planetary/apod?api_key={nasa_api_key}"
+    response = requests.get(url)
+    data = response.json()
+
+    print("Astronomy Picture of the Day (APOD)")
+    print(f"Title: {data['title']}")
+    print(f"Date: {data['date']}")
+    print(f"Explanation: {data['explanation']}")
+
+    image_url = data['url']
+    response = requests.get(image_url)
+    img = Image.open(BytesIO(response.content))
+    img.show()
+
+
+
+def get_mars_rover_photos():
+    rover_name = input("Enter the Mars rover name (Curiosity, Opportunity, or Spirit): ")
+    sol = input("Enter the Martian sol (e.g., 1000): ")
+
+    url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover_name}/photos"
+    params = {
+        'api_key': nasa_api_key,
+        'sol': sol
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    if 'photos' in data:
+        photos = data['photos']
+
+        # Display the first 5 images using PIL
+        for i in range(min(5, len(photos))):
+            photo = photos[i]
+            print(f"Image ID: {photo['id']}")
+            print(f"Earth Date: {photo['earth_date']}")
+            print(f"Image URL: {photo['img_src']}")
+
+            image_url = photo['img_src']
+            response = requests.get(image_url)
+            img = Image.open(BytesIO(response.content))
+            img.show()
+
+        # Provide links to the rest of the images
+        if len(photos) > 5:
+            print(f"\n{len(photos) - 5} more images are available. Here are their URLs:")
+            for i in range(5, len(photos)):
+                photo = photos[i]
+                print(f"Image ID: {photo['id']}")
+                print(f"Earth Date: {photo['earth_date']}")
+                print(f"Image URL: {photo['img_src']}")
+    else:
+        print("No photos found for the given rover and sol.")
+
+
+def get_iss_information():
+    url = "http://api.open-notify.org/iss-now.json"
+    response = requests.get(url)
+    data = response.json()
+
+    print("International Space Station (ISS) Information")
+    print(f"Timestamp: {data['timestamp']}")
+    print(f"Latitude: {data['iss_position']['latitude']}")
+    print(f"Longitude: {data['iss_position']['longitude']}")
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 def get_response(user_input):
     if user_input.lower() in greetings:
         return random.choice(greetings_reply)
@@ -460,7 +588,7 @@ def get_response(user_input):
         return inspirational_quote()
     elif 'open calculator' in user_input.lower():
         return run_calculator()
-    elif 'password genrator' in user_input.lower():
+    elif 'password generator' in user_input.lower():
         return password()
     elif 'show time'in user_input.lower():
         return show_time()
@@ -480,10 +608,14 @@ def get_response(user_input):
         return facts()
     elif 'verify a number for me' in user_input.lower():
         return main_phone_verify()
+    elif 'give me a movie review' in user_input.lower():
+        return movie_review()
     elif 'tell me news' in user_input.lower():
         API_KEY_NEWS = 'f53fa01d77b449edbf5d350fdfa3790e'
         news_message = get_top_news(API_KEY_NEWS)
         print(news_message)
+    elif 'open nasa menu' in user_input.lower():
+        return nasa_chatbot()
     for command, response in responses.items():
         if command in user_input.lower():
             return response
