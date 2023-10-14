@@ -267,7 +267,7 @@ def display_movie_details(movie_data):
 
 # Main chatbot loop
 def movie_review():
-    api_key = "26f686db28afe4deb183f11da46662a2"
+    api_key = "####################################"
 
     while True:
         movie_name = input("Please enter the name of the movie (or 'exit' to quit): ").strip()
@@ -284,7 +284,7 @@ def movie_review():
 def facts():
     limit = 1
     api_url = 'https://api.api-ninjas.com/v1/facts?limit={}'.format(limit)
-    response = requests.get(api_url, headers={'X-Api-Key': 'TQT6nHiNqC+kr5w/7T2E8w==xb5EH2JGz8m0Rjnw'})
+    response = requests.get(api_url, headers={'X-Api-Key': '###############################'})
     if response.status_code == requests.codes.ok:
         print(response.text)
     else:
@@ -395,7 +395,7 @@ def show_calendar(year, month):
 #PHONE NUMBER VERIFICATION
 def search_mobile_number_info(mobile_number):
 
-    api_url = f"http://apilayer.net/api/validate?access_key=5baaa347edeb7f05c37aae61d0c6c6ed&number={mobile_number}&country_code=IN&format=1"
+    api_url = f"http://apilayer.net/api/validate?access_key=###################&number={mobile_number}&country_code=IN&format=1"
 
     try:
 
@@ -460,7 +460,7 @@ def get_top_news(API_KEY):
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Weather functionality
 def get_weather_info(city):
-    api_key = "06e15dfe723a1ac8cff656f2b37bbc07"
+    api_key = "#######################"
     base_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
 
     try:
@@ -487,7 +487,7 @@ def get_weather_info(city):
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #NASA API FUNCTION
-nasa_api_key = "5G5Ho9kuGoGO8sHC6WX2tDO0745V8VHz3KLMmDhs"
+nasa_api_key = "########################"
 
 
 def nasa_chatbot():
@@ -611,7 +611,7 @@ def get_response(user_input):
     elif 'give me a movie review' in user_input.lower():
         return movie_review()
     elif 'tell me news' in user_input.lower():
-        API_KEY_NEWS = 'f53fa01d77b449edbf5d350fdfa3790e'
+        API_KEY_NEWS = '###################################'
         news_message = get_top_news(API_KEY_NEWS)
         print(news_message)
     elif 'open nasa menu' in user_input.lower():
