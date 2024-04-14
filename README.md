@@ -1,5 +1,5 @@
 # Python_chatbot
-it is a python chatbot with multiple functionalities that are offered through api
+It is a python chatbot with multiple functionalities that are offered through api
 **Description of the Python Chatbot**
 
 The Python Chatbot is a versatile virtual assistant designed to interact with users and provide a wide range of functionalities. It is capable of responding to various commands and inquiries, making it a useful tool for different tasks. Here's a description of its key functionalities and the commands it uses:
